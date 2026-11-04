@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}My Profile | CampusConnect{% endblock %}
+{% block content %}
+<p class="eyebrow">Account settings</p><h1 class="fw-bold mb-2">Make it yours.</h1><p class="text-muted mb-4">Keep your campus profile up to date.</p>
+<div class="row g-4"><aside class="col-lg-4"><div class="card p-4"><span class="avatar mb-3" aria-hidden="true">{{ user.username|slice:":1"|upper }}</span><h2 class="h4">{{ user.get_full_name|default:user.username }}</h2><p class="text-muted">@{{ user.username }}</p><div><span class="badge role-badge rounded-pill">{{ user.get_role_display }}</span></div><hr><p class="small text-muted mb-0">Member since {{ user.date_joined|date:"F Y" }}</p></div></aside><section class="col-lg-8"><div class="card p-4 p-md-5"><h2 class="h4 fw-bold mb-2">Personal information</h2><p class="text-muted small mb-4">Your changes will be saved to your campus account.</p><form method="post" class="form-fields">{% csrf_token %}{% include "includes/form_fields.html" %}<div class="d-flex flex-wrap gap-2 mt-4"><button class="btn btn-primary" type="submit">Save changes</button><a class="btn btn-outline-secondary" href="{% url 'dashboard' %}">Cancel</a></div></form></div></section></div>
+{% endblock %}

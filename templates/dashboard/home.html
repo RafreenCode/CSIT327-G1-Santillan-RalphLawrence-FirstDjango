@@ -1,14 +1,17 @@
 {% extends "base.html" %}
-
+{% block title %}Dashboard | CampusConnect{% endblock %}
 {% block content %}
-<h2>Welcome, {{ user.first_name|default:user.username }}!</h2>
-<ul>
-    <li>Role: {{ user.get_role_display }}</li>
-    <li>Course: {{ user.course|default:"Not set" }}</li>
-    <li>Members: {{ member_count }}</li>
-    <li>Last login: {{ user.last_login|date:"M d, Y" }}</li>
-</ul>
-{% if is_admin %}
-    <a href="{% url 'admin_panel' %}">Open admin panel</a>
-{% endif %}
+<section class="hero p-4 p-md-5 mb-4 d-flex flex-wrap justify-content-between align-items-center gap-4">
+    <div><p class="eyebrow mb-3">Your campus, connected</p><h1 class="display-6 fw-bold">Welcome, {{ user.first_name|default:user.username }}.</h1><p class="mb-0">A little space for everything that makes you part of campus.</p></div>
+    <a href="{% url 'profile' %}" class="btn btn-light">Edit my profile &rarr;</a>
+</section>
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-lg-4"><div class="card p-4 h-100"><p class="text-muted small mb-2">Campus community</p><div class="stat">{{ member_count }}</div><span class="small text-muted">Registered members</span></div></div>
+    <div class="col-sm-6 col-lg-4"><div class="card p-4 h-100"><p class="text-muted small mb-2">Your role</p><h2 class="h3 fw-bold my-2">{{ user.get_role_display }}</h2><span class="small text-muted">Your place in the community</span></div></div>
+    <div class="col-lg-4"><div class="card p-4 h-100"><p class="text-muted small mb-2">Your course</p><h2 class="h3 fw-bold my-2">{{ user.course|default:"Not added yet" }}</h2><a class="small" href="{% url 'profile' %}">Update your details &rarr;</a></div></div>
+</div>
+<div class="row g-4">
+    <section class="col-md-8"><div class="card p-4 h-100"><p class="eyebrow">My account</p><div class="d-flex gap-3 align-items-center mb-4"><span class="avatar" aria-hidden="true">{{ user.username|slice:":1"|upper }}</span><div><h2 class="h4 mb-1">{{ user.get_full_name|default:user.username }}</h2><span class="text-muted">@{{ user.username }}</span></div></div><dl class="row mb-0"><dt class="col-sm-4 mb-2">Email address</dt><dd class="col-sm-8">{{ user.email|default:"Not added yet" }}</dd><dt class="col-sm-4 mb-2">Last login</dt><dd class="col-sm-8">{{ user.last_login|date:"M d, Y, P"|default:"First visit" }}</dd><dt class="col-sm-4 mb-2">Member since</dt><dd class="col-sm-8">{{ user.date_joined|date:"M d, Y" }}</dd></dl></div></section>
+    <section class="col-md-4"><div class="card p-4 h-100"><p class="eyebrow">Make yourself at home</p><h2 class="h4">Keep your profile up to date.</h2><p class="text-muted">Add your name, email, and course so your account reflects you.</p><a href="{% url 'profile' %}" class="btn btn-primary mt-auto">Manage profile</a>{% if is_admin %}<a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary mt-2">Open admin panel</a>{% endif %}</div></section>
+</div>
 {% endblock %}

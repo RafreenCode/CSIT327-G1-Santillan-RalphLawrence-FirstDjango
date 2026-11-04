@@ -1,3 +1,13 @@
 {% extends "base.html" %}
-
-{% block content %}<h2>Admin Panel</h2>{% endblock %}
+{% block title %}Admin Panel | CampusConnect{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4"><div><p class="eyebrow">Campus administration</p><h1 class="fw-bold">Community overview</h1><p class="text-muted mb-0">A closer look at the people who make up your campus.</p></div><span class="badge role-badge rounded-pill px-3 py-2">Administrator access</span></div>
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3"><div class="card p-4 h-100"><p class="small text-muted mb-1">Total members</p><div class="stat">{{ member_count }}</div></div></div>
+    <div class="col-6 col-lg-3"><div class="card p-4 h-100"><p class="small text-muted mb-1">Students</p><div class="stat">{{ student_count }}</div></div></div>
+    <div class="col-6 col-lg-3"><div class="card p-4 h-100"><p class="small text-muted mb-1">Instructors</p><div class="stat">{{ instructor_count }}</div></div></div>
+    <div class="col-6 col-lg-3"><div class="card p-4 h-100"><p class="small text-muted mb-1">Administrators</p><div class="stat">{{ admin_count }}</div></div></div>
+</div>
+<section class="card overflow-hidden"><div class="p-4"><h2 class="h4 fw-bold mb-1">Newest members</h2><p class="text-muted small mb-0">The eight most recently registered campus accounts.</p></div><div class="table-responsive"><table class="table align-middle mb-0"><caption class="visually-hidden">Recently registered members</caption><thead><tr><th scope="col">Member</th><th scope="col">Role</th><th scope="col">Course</th><th scope="col">Joined</th></tr></thead><tbody>{% for member in recent_members %}<tr><td><div class="fw-semibold">{{ member.get_full_name|default:member.username }}</div><span class="text-muted small">@{{ member.username }}</span></td><td><span class="badge role-badge rounded-pill">{{ member.get_role_display }}</span></td><td>{{ member.course|default:"Not provided" }}</td><td class="text-nowrap text-muted">{{ member.date_joined|date:"M d, Y" }}</td></tr>{% empty %}<tr><td colspan="4" class="text-center text-muted py-5">No members have joined yet.</td></tr>{% endfor %}</tbody></table></div></section>
+<a href="{% url 'dashboard' %}" class="btn btn-outline-secondary mt-4">&larr; Back to dashboard</a>
+{% endblock %}

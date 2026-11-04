@@ -1,0 +1,6 @@
+{% extends "admin/login.html" %}
+{% block content %}
+<div class="campus-login-intro"><p class="campus-eyebrow">Campus administration</p><h1>Welcome back.</h1><p>Sign in with your staff account to manage your campus community.</p></div>
+{{ block.super }}
+<a class="campus-back" href="{% url 'dashboard' %}">&larr; Back to CampusConnect</a>
+{% endblock %}

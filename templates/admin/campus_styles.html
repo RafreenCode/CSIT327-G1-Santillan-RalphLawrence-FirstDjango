@@ -1,0 +1,65 @@
+<style>
+:root, html[data-theme="light"], html[data-theme="dark"] {
+    color-scheme: light;
+    --primary: #087f73; --secondary: #142f38; --accent: #72e4d3;
+    --primary-fg: #fff; --body-fg: #243d44; --body-bg: #f3f6f6;
+    --body-quiet-color: #60767b; --body-medium-color: #52696f; --body-loud-color: #142f38;
+    --header-color: #d7e9e7; --header-branding-color: #fff; --header-bg: #142f38; --header-link-color: #fff;
+    --breadcrumbs-fg: #52696f; --breadcrumbs-link-fg: #087f73; --breadcrumbs-bg: #e6efed;
+    --link-fg: #087f73; --link-hover-color: #05594f; --link-selected-fg: #06665d;
+    --hairline-color: #e5edeb; --border-color: #cfddda;
+    --darkened-bg: #eaf1ef; --selected-bg: #daf3ee; --selected-row: #e8f7f2;
+    --button-fg: #fff; --button-bg: #087f73; --button-hover-bg: #06665d;
+    --default-button-bg: #087f73; --default-button-hover-bg: #05594f;
+    --close-button-bg: #52696f; --close-button-hover-bg: #243d44;
+    --object-tools-fg: #fff; --object-tools-bg: #087f73; --object-tools-hover-bg: #06665d;
+}
+body { font-family: system-ui, sans-serif; }
+#header { padding: 22px 36px; }
+#site-name { margin: 0; }
+.campus-brand { display: inline-flex; align-items: center; gap: 12px; font-size: 23px; font-weight: 750; letter-spacing: -.6px; text-decoration: none; }
+.campus-brand svg { flex-shrink: 0; }
+.campus-brand small { display: block; color: #a8cac4; font-size: 11px; font-weight: 500; letter-spacing: .13em; text-transform: uppercase; margin-top: 4px; }
+#user-tools { line-height: 2; }
+#user-tools a, #logout-form button { border-bottom-color: #54847c; }
+.theme-toggle { display: none; }
+#content { padding: 32px 36px; }
+h1 { color: #142f38; font-weight: 750; letter-spacing: -.04em; }
+.module, #content-related { border: 1px solid #dfe8e7; border-radius: 16px; background: #fff; overflow: hidden; box-shadow: 0 4px 18px #153e3805; }
+.module h2, .module caption, .inline-group h2 { background: #142f38; padding: 14px 18px; }
+.module table { width: 100%; }
+.module td, .module th { padding: 15px 18px; }
+.dashboard #content { width: auto; max-width: 1400px; margin: 0 auto; }
+.dashboard #content-main { width: calc(100% - 330px); }
+.dashboard #content-related { width: 290px; margin-right: -330px; }
+#content-related .module { border: 0; box-shadow: none; }
+#content-related h2 { color: #fff; }
+#content-related h3, #content-related p, #content-related .actionlist { margin-left: 18px; margin-right: 18px; }
+.campus-hero { background: #142f38; color: #d7e9e7; padding: 30px; border-radius: 18px; margin-bottom: 28px; }
+.campus-eyebrow { color: #087f73; font-size: 11px; text-transform: uppercase; letter-spacing: .14em; font-weight: 750; }
+.campus-hero .campus-eyebrow { color: #72e4d3; }
+.campus-hero h2 { color: white; font-size: 28px; margin: 10px 0; font-weight: 750; letter-spacing: -.03em; }
+.campus-hero p:last-child { margin-bottom: 0; }
+input, textarea, select { border-radius: 8px; }
+input:focus, textarea:focus, select:focus { outline: 3px solid #087f7330; border-color: #087f73; }
+.button, input[type=submit], input[type=button], .submit-row input, a.button { border-radius: 9px; padding: 11px 18px; font-weight: 600; }
+.campus-footer { padding: 24px 36px; color: #60767b; font-size: 12px; text-align: center; }
+body.login { background: #f3f6f6; }
+.login #container { width: min(480px, calc(100% - 32px)); min-width: 0; margin: 7vh auto 0; border: 1px solid #dfe8e7; border-radius: 20px; box-shadow: 0 16px 48px #142f380a; overflow: hidden; background: #fff; }
+.login #header { padding: 26px; }
+.login #content { padding: 30px; }
+.login #content-main { width: 100%; }
+.login .campus-login-intro h1 { font-size: 28px; margin: 10px 0; }
+.login .campus-login-intro p:last-child { color: #60767b; margin-bottom: 22px; line-height: 1.6; }
+.login #login-form .form-row { padding: 10px 0; }
+.login #login-form .form-row label { font-weight: 600; font-size: 14px; }
+.login #login-form .form-row input { width: 100%; padding: 12px; box-sizing: border-box; }
+.login #login-form .submit-row { padding: 18px 0 0; margin: 0; background: transparent; border: none; }
+.login .submit-row input { width: 100%; }
+.login .campus-back { display: block; margin-top: 24px; text-align: center; }
+@media (max-width: 767px) {
+    #header { padding: 18px 20px; } #content { padding: 24px 16px; }
+    .dashboard #content-main, .dashboard #content-related { width: 100%; margin: 0 0 24px; float: none; }
+    .campus-hero { padding: 24px; } .login #content { padding: 24px; }
+}
+</style>

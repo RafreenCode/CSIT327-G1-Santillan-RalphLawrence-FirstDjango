@@ -4,24 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CampusConnect{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --campus-navy: #142f38; --campus-teal: #087f73; }
+        body { background: #f3f6f6; color: #243d44; font-family: system-ui, sans-serif; }
+        .navbar { background: var(--campus-navy); }
+        .navbar-brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 750; letter-spacing: -.6px; }
+        .brand-mark { display: block; width: 42px; height: 42px; flex-shrink: 0; }
+        .nav-link.active { color: #72e4d3 !important; }
+        .eyebrow { color: var(--campus-teal); font-size: .75rem; letter-spacing: .14em; font-weight: 750; text-transform: uppercase; }
+        h1, h2, h3 { color: var(--campus-navy); letter-spacing: -.035em; }
+        .card { border: 1px solid #dfe8e7; border-radius: 18px; box-shadow: 0 4px 18px #153e3805; }
+        .hero { background: var(--campus-navy); color: #d7e9e7; border-radius: 20px; }
+        .hero h1, .hero h2 { color: white; }
+        .hero .eyebrow { color: #72e4d3; }
+        .btn-primary { --bs-btn-bg: #087f73; --bs-btn-border-color: #087f73; --bs-btn-hover-bg: #06665d; --bs-btn-hover-border-color: #06665d; --bs-btn-active-bg: #05594f; --bs-btn-active-border-color: #05594f; }
+        .btn { border-radius: 9px; padding: .65rem 1.1rem; font-weight: 600; }
+        a { color: #087f73; }
+        .avatar { width: 64px; height: 64px; display: inline-flex; align-items: center; justify-content: center; background: #daf3ee; color: #08675e; border-radius: 18px; font-size: 1.6rem; font-weight: 700; }
+        .stat { font-size: 2.25rem; font-weight: 750; letter-spacing: -.05em; color: var(--campus-navy); }
+        .role-badge { background: #e1f3ee; color: #08675e; font-weight: 600; }
+        .table > :not(caption) > * > * { padding: 1rem; }
+        .table th { background: #f7fafa; font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: #52696f; }
+        .form-fields input, .form-fields select, .form-fields textarea { display: block; width: 100%; padding: .7rem .85rem; border: 1px solid #b9cbc9; border-radius: 9px; background: white; color: #243d44; }
+        .form-fields input:focus { outline: 3px solid #087f7330; border-color: #087f73; }
+        .form-fields label { display: block; font-weight: 600; margin-bottom: .4rem; }
+        .form-fields .helptext { display: block; color: #60767b; font-size: .82rem; margin-top: .4rem; }
+        .form-fields .helptext ul { padding-left: 1.2rem; margin-bottom: 0; }
+        .errorlist { color: #b42318; font-size: .875rem; padding-left: 1.2rem; }
+        .auth-wrap { max-width: 540px; margin: 1.5rem auto; }
+        .text-muted { color: #60767b !important; }
+    </style>
 </head>
-<body>
-    <nav>
-        {% if user.is_authenticated %}
-            <h1>Hi, {{ user.username }}!</h1>
-
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">Log out</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Log in</a>
-            <a href="{% url 'signup' %}">Sign up</a>
-        {% endif %}
+<body class="d-flex flex-column min-vh-100">
+    <a class="visually-hidden-focusable p-2 bg-white" href="#main-content">Skip to content</a>
+    <nav class="navbar navbar-expand-md navbar-dark py-3" aria-label="Main navigation">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">
+                <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <rect width="48" height="48" rx="13" fill="#36C7B3"/>
+                    <path d="M8 20L24 12L40 20L24 28L8 20Z" fill="#142F38"/>
+                    <path d="M15 26V32C20 36 28 36 33 32V26L24 30.5L15 26Z" fill="#142F38"/>
+                    <path d="M39 21V31" stroke="#142F38" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="39" cy="34" r="2" fill="#142F38"/>
+                    <path d="M20 20L24 18L28 20L24 22L20 20Z" fill="#D7FFF5"/>
+                </svg>
+                CampusConnect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navigation">
+                <div class="navbar-nav ms-auto gap-md-3 align-items-md-center">
+                {% if user.is_authenticated %}
+                    <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">My profile</a>
+                    {% if user.can_access_admin_panel %}<a class="nav-link {% if request.resolver_match.url_name == 'admin_panel' %}active{% endif %}" href="{% url 'admin_panel' %}">Admin panel</a>{% endif %}
+                    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-outline-light btn-sm" type="submit">Log out</button></form>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                    <a class="btn btn-primary" href="{% url 'signup' %}">Join the campus</a>
+                {% endif %}
+                </div>
+            </div>
+        </div>
     </nav>
-    
-    <main>
+    <main id="main-content" class="container py-4 py-md-5 flex-grow-1">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show" role="status">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Dismiss message"></button></div>
+        {% endfor %}
         {% block content %}{% endblock %}
     </main>
+    <footer class="container py-4 border-top d-flex flex-wrap justify-content-between gap-2 small text-muted"><span class="fw-semibold">CampusConnect</span><span>Your campus. Your community.</span></footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

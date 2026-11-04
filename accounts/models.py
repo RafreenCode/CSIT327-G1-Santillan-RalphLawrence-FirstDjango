@@ -10,3 +10,7 @@ class CustomUser(AbstractUser):
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.STUDENT)
     course = models.CharField(max_length=100, blank=True, null=True)
+
+    @property
+    def can_access_admin_panel(self):
+        return self.is_active and (self.is_superuser or self.role == self.Role.ADMIN)
