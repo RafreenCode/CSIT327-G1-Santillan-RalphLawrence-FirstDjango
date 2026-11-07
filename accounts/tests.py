@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 from .models import CustomUser
 
@@ -45,5 +45,26 @@ class AccountFlowTests(TestCase):
         response = self.client.post(reverse("profile"), {"username": "taken"})
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context["form"].errors)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, "student")
+
+
+    def test_lab_forms_share_bootstrap_styling(self):
+        for route in ("signup", "login", "profile"):
+            if route == "profile":
+                self.client.force_login(self.user)
+            response = self.client.get(reverse(route))
+            self.assertEqual(response.status_code, 200)
+            self.assertTemplateUsed(response, "base.html")
+            self.assertContains(response, "bootstrap@5.3.3/dist/css/bootstrap.min.css")
+            self.assertContains(response, 'class="form-control"')
+            self.assertContains(response, 'class="form-label"')
+            self.assertContains(response, 'name="csrfmiddlewaretoken"')
+
+    def test_profile_post_requires_csrf_token(self):
+        client = Client(enforce_csrf_checks=True)
+        client.force_login(self.user)
+        response = client.post(reverse("profile"), {"username": "changed"})
+        self.assertEqual(response.status_code, 403)
         self.user.refresh_from_db()
         self.assertEqual(self.user.username, "student")
