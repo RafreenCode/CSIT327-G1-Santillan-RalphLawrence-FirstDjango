@@ -73,13 +73,8 @@ Run the account and access-control tests with `.\.venv\Scripts\python.exe manage
 
 All application pages share a responsive Bootstrap 5 design loaded via CDN (internet access is required for Bootstrap). Registration displays a success message on the login page; profile updates display a confirmation on the profile page. Users can edit their username, name, email, and course; roles and permissions cannot be changed through these forms.
 
-## Lab submission
+## Feature verification
 
-Before submission, verify sign-up and its Bootstrap success alert, login, profile editing and saved values, logout, and profile login protection. Run the system checks and tests above.
+Register a new account at `/accounts/signup/`. After successful registration, the login page shows a green Bootstrap success alert below the navbar. The message is displayed once; opening the login page directly or refreshing it does not recreate the sign-up message.
 
-1. Commit and push the final code before the assignment deadline.
-2. Confirm the repository is public or shared with the instructor.
-3. Submit your full name, section, and repository link at https://forms.gle/bgJn2qMnPkms17DW6.
-4. Return to the assignment in Teams and click **Turn in**.
-
-The role-protected admin panel is an additional feature; an admin account is not required for the lab profile and sign-up requirements.
+Log in, open **My profile**, edit your details, and save. The updated values and a success alert appear on the profile page. Log out to confirm that the profile requires login. The role-protected admin panel is an additional feature.

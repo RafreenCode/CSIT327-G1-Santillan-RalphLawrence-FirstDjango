@@ -1,5 +1,7 @@
 from django.test import Client, TestCase
 from django.urls import reverse
+from django.views.generic import UpdateView
+from .views import ProfileUpdateView
 from .models import CustomUser
 
 
@@ -16,6 +18,9 @@ class AccountFlowTests(TestCase):
         }, follow=True)
         self.assertRedirects(response, reverse("login"))
         self.assertContains(response, "Your account has been created successfully")
+        self.assertContains(response, "alert-success")
+        self.assertContains(response, 'role="status"')
+        self.assertNotContains(self.client.get(reverse("login")), "Your account has been created successfully")
         self.assertEqual(CustomUser.objects.get(username="newmember").role, CustomUser.Role.STUDENT)
 
     def test_profile_requires_login(self):
@@ -68,3 +73,60 @@ class AccountFlowTests(TestCase):
         self.assertEqual(response.status_code, 403)
         self.user.refresh_from_db()
         self.assertEqual(self.user.username, "student")
+
+
+    def test_profile_is_updateview_and_ignores_other_user_query(self):
+        self.assertTrue(issubclass(ProfileUpdateView, UpdateView))
+        other = CustomUser.objects.create_user(username="private-other", first_name="Private")
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("profile"), {"pk": other.pk, "user_id": other.pk})
+        self.assertEqual(response.context["object"].pk, self.user.pk)
+        self.assertNotContains(response, 'value="Private"')
+        self.assertEqual(self.client.get(f"/accounts/profile/{other.pk}/").status_code, 404)
+
+    def test_invalid_signup_does_not_show_success_or_create_user(self):
+        response = self.client.post(reverse("signup"), {
+            "username": "invalid-user", "password1": "Campus-test-9821",
+            "password2": "different-password",
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["form"].errors)
+        self.assertNotContains(response, "Your account has been created successfully")
+        self.assertFalse(CustomUser.objects.filter(username="invalid-user").exists())
+
+    def test_real_login_profile_save_and_logout_with_csrf(self):
+        client = Client(enforce_csrf_checks=True)
+        client.get(reverse("login"))
+        response = client.post(reverse("login"), {
+            "username": "student", "password": "Campus-test-9821",
+            "csrfmiddlewaretoken": client.cookies["csrftoken"].value,
+        }, follow=True)
+        self.assertRedirects(response, reverse("dashboard"))
+        client.get(reverse("profile"))
+        response = client.post(reverse("profile"), {
+            "username": "student", "first_name": "Verified", "last_name": "Student",
+            "email": "verified@example.com", "course": "Computer Science",
+            "csrfmiddlewaretoken": client.cookies["csrftoken"].value,
+        }, follow=True)
+        self.assertRedirects(response, reverse("profile"))
+        self.assertContains(response, "alert-success")
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, "Verified")
+        self.assertContains(client.get(reverse("profile")), 'value="Verified"')
+        response = client.post(reverse("logout"), {
+            "csrfmiddlewaretoken": client.cookies["csrftoken"].value,
+        }, follow=True)
+        self.assertRedirects(response, reverse("login"))
+        self.assertEqual(client.get(reverse("profile")).status_code, 302)
+
+    def test_signup_and_login_reject_posts_without_csrf(self):
+        client = Client(enforce_csrf_checks=True)
+        for route in ("signup", "login"):
+            self.assertEqual(client.post(reverse(route), {}).status_code, 403)
+
+    def test_django_admin_pages_load(self):
+        self.assertEqual(self.client.get(reverse("admin:login")).status_code, 200)
+        admin = CustomUser.objects.create_superuser(username="page-admin", password="Campus-test-9821")
+        self.client.force_login(admin)
+        for route in ("admin:index", "admin:accounts_customuser_changelist", "admin:accounts_customuser_add"):
+            self.assertEqual(self.client.get(reverse(route)).status_code, 200)
